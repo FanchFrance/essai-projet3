@@ -6,7 +6,7 @@ const connection = require("../config");
 router.get("/", (req, res) => {
   connection.query("SELECT * from user", (err, results) => {
     if (err) {
-      res.status(500).send(err);
+      res.status(500).send("Error retrieving users");
     } else {
       res.json(results);
     }
