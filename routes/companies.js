@@ -51,7 +51,9 @@ router.get('/:companyId/users', (req, res) => {
                 sql: err.sql
             })
         }
-
+        if (results.length === 0) {
+            res.status(500).send("L'entreprise n'a pas pu être récupérée")
+        }
         return res.json(results);
     })
 
