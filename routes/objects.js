@@ -7,12 +7,12 @@ router.get('/', (req, res) => {
 
     connection.query('SELECT * FROM objects', (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql: err.sql
             })
         } else {
-            res.json(results);
+            return res.json(results);
         }
     })
 })
@@ -21,14 +21,14 @@ router.get('/:id', (req, res) => {
 
     connection.query('SELECT * FROM objects WHERE id = ?', req.params.id, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql: err.sql,
             });
         } 
 
         if (results.length === 0) {
-            res.status(404).send("L'objet n'a pas pu être récupéré.");
+            return res.status(404).send("L'objet n'a pas pu être récupéré.");
         }
 
         return res.json(results[0]);
@@ -49,7 +49,7 @@ router.post('/', (req, res) => {
             } else {
 
                 if (results[0] != undefined) {
-                    res.send('Cet objet est déjà dans la base de donnée')
+                    return res.send('Cet objet est déjà dans la base de donnée')
                 } else {
 
                     connection.query('INSERT INTO objects SET ?', req.body, (err, results) => {
@@ -115,7 +115,7 @@ router.delete('/:id', (req, res) => {
                 sql: err.sql
             })
         } else {
-            res.status(200).json({ status : "Objet Supprimé"});
+            return res.status(200).json({ status : "Objet Supprimé"});
         }
     })
 

@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 
     connection.query('SELECT * FROM admin', (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
@@ -23,14 +23,14 @@ router.get('/:id', (req, res) => {
 
     connection.query('SELECT * FROM admin WHERE id = ?', req.params.id, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
         } 
         
         if (results.length === 0) {
-            res.status(404).send("l'administrateur n'a pas pu être trouvé")
+            return res.status(404).send("l'administrateur n'a pas pu être trouvé")
         }
         const insertedAdmin = results[0];
         const { password, ...admin } = insertedAdmin;
@@ -58,16 +58,16 @@ router.post('/',userValidationMiddlewares, (req, res) => {
 
         connection.query('SELECT * FROM admin WHERE email = ?', [req.body.email], (err, results) => {
             if (err) {
-                res.status(500).json({error: err.message});
+                return res.status(500).json({error: err.message});
             } else {
 
                 if (results[0] != undefined) {
-                    res.send("Cet email est déjà pris")
+                    return res.send("Cet email est déjà pris")
                 } else {
 
                     connection.query('INSERT INTO admin SET ?', req.body, (err, results) => {
                         if (err) {
-                            res.status(500).json({
+                            return res.status(500).json({
                                 error: err.message,
                                 sql: err.sql
                             });
@@ -123,12 +123,12 @@ router.delete('/:id', (req, res) => {
 
     connection.query('DELETE FROM admin WHERE id = ?', req.params.id, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql: err.sql
             });
         } else {
-            res.status(200).json({statut: `Administrateur ${req.params.id} supprimé`})
+            return res.status(200).json({statut: `Administrateur ${req.params.id} supprimé`})
         }
     })
 })

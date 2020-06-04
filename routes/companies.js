@@ -14,12 +14,12 @@ router.get('/', (req, res) => {
 
     connection.query('SELECT * FROM companies', (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
         } else {
-            res.json(results);
+            return res.json(results);
         }
     })
 })
@@ -29,14 +29,14 @@ router.get('/:companyId', (req, res) => {
 
     connection.query('SELECT * FROM companies WHERE id = ?', [idCompany], (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
         } 
         
         if (results.length === 0) {
-            res.status(404).send("l'entreprise n'a pas pu être trouvée")
+            return res.status(404).send("l'entreprise n'a pas pu être trouvée")
         }
         return res.status(200).json(results[0]);
     })
@@ -50,10 +50,10 @@ router.get('/:companyId/users', (req, res) => {
                 error: err.message,
                 sql: err.sql
             })
+        } else if (results.length === 0)  {
+            return res.status(500).send("L'entreprise n'a pas pu être récupérée") 
         }
-        if (results.length === 0) {
-            res.status(500).send("L'entreprise n'a pas pu être récupérée")
-        }
+        
         return res.json(results);
     })
 
@@ -70,16 +70,16 @@ router.post('/', userValidationMiddlewares, (req, res) => {
 
         connection.query('SELECT * FROM companies WHERE name = ?', [req.body.name], (err, results) => {
             if (err) {
-                res.status(500).json({error: err.message});
+                return res.status(500).json({error: err.message});
             } else {
 
                 if (results[0] != undefined) {
-                    res.send("L'entreprise est déjà dans la base de donnée")
+                    return res.send("L'entreprise est déjà dans la base de donnée")
                 } else {
 
                     connection.query('INSERT INTO companies SET ?', req.body, (err, results) => {
                         if (err) {
-                            res.status(500).json({
+                            return res.status(500).json({
                                 error: err.message,
                                 sql: err.sql
                             });
@@ -87,7 +87,7 @@ router.post('/', userValidationMiddlewares, (req, res) => {
 
                         return connection.query('SELECT * FROM companies WHERE id = ?', results.insertId, (err2, records) => {
                             if (err2) {
-                                res.status(500).json({
+                                return res.status(500).json({
                                     error : err2.message,
                                     sql: err2.sql
                                 });
@@ -137,12 +137,12 @@ router.delete('/:companyId', (req, res) => {
 
     connection.query('DELETE FROM companies WHERE id = ?', req.params.companyId, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql: err.sql
             });
         } else {
-            res.status(200).json({statut: "succès"})
+            return res.status(200).json({statut: "L'entreprise a été supprimé"})
         }
     })
 })

@@ -6,7 +6,7 @@ const connection = require('../config');
 router.get('/', (req, res) => {
     connection.query('SELECT * FROM sessions ', (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
@@ -21,12 +21,12 @@ router.get('/:id', (req, res) => {
 
     connection.query('SELECT * FROM sessions WHERE id = ?', idSession, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
         } else if (results.length === 0) {
-        res.status(404).send('Session introuvable')
+            return res.status(404).send('Session introuvable')
         }
 
         return res.status(200).json(results[0]);
@@ -39,14 +39,14 @@ router.get('/:id/users', (req, res) => {
 
     connection.query(sql, req.params.id, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
         } 
 
         if (results.length === 0) {
-            res.status(404).send('Impossible de récupérer les utilisateurs')
+            return res.status(404).send('Impossible de récupérer les utilisateurs')
         }
 
         return res.status(200).json(results);
@@ -60,14 +60,14 @@ router.get('/:id/admin', (req, res) => {
 
     connection.query('SELECT a.* FROM admin AS a JOIN sessions AS s ON a.id = s.admin_id WHERE s.id = ?', idSession, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
         } 
         
         if (results.length === 0) {
-            res.status(404).send('Impossible de récupérer les utilisateurs')
+            return res.status(404).send('Impossible de récupérer les utilisateurs')
         }
 
         return res.status(200).json(results);
@@ -80,14 +80,14 @@ router.get('/:id/games', (req, res) => {
 
     connection.query('SELECT g.* FROM games AS g JOIN sessions AS s ON g.id = s.admin_id WHERE s.id = ?', idSession, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
         } 
         
         if (results.length === 0) {
-            res.status(404).send('Impossible de récupérer les utilisateurs')
+            return res.status(404).send('Impossible de récupérer les utilisateurs')
         }
 
         return res.status(200).json(results);
@@ -98,7 +98,7 @@ router.post('/', (req, res) => {
 
     connection.query('INSERT INTO sessions SET ?', req.body, (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
@@ -106,7 +106,7 @@ router.post('/', (req, res) => {
 
         return connection.query('SELECT * FROM sessions WHERE id = ?', results.insertId, (err2, records) => {
             if (err2) {
-                res.status(500).json({
+                return res.status(500).json({
                     error: err2.message,
                     sql : err2.sql
                 });
@@ -124,7 +124,7 @@ router.put('/:id', (req, res) => {
 
     connection.query('UPDATE sessions SET ? WHERE id = ?', [req.body, req.params.id], (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error: err.message,
                 sql : err.sql
             });
@@ -132,7 +132,7 @@ router.put('/:id', (req, res) => {
 
         return connection.query('SELECT * FROM sessions WHERE id = ?', req.params.id, (err2, records) => {
             if (err2) {
-                res.status(500).json({
+                return res.status(500).json({
                     error: err2.message,
                     sql : err2.sql
                 });
@@ -155,7 +155,7 @@ router.delete('/:id', (req, res) => {
                 sql: err.sql
             })
         } else {
-            res.status(200).json({ status : `Session ${req.params.id} Supprimée`});
+            return res.status(200).json({ status : `Session ${req.params.id} Supprimée`});
         }
     })
 

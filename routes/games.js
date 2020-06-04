@@ -29,7 +29,7 @@ router.get('/:id', (req, res) => {
         }
         
         if (results.length === 0) {
-            res.status(404).send("Le jeu n'a pas pu être récupéré")
+           return res.status(404).send("Le jeu n'a pas pu être récupéré")
         }
 
         return res.json(results[0]);
@@ -48,7 +48,7 @@ router.get('/:id/objects', (req, res) => {
         }
 
         if (results.length === 0) {
-            res.status(404).send("Le jeu n'a pas pu être récupéré")
+            return res.status(404).send("Le jeu n'a pas pu être récupéré")
         } 
 
         return res.json(results);
@@ -66,7 +66,7 @@ router.get('/:id/messages', (req, res) => {
         }
 
         if (results.length === 0) {
-            res.status(404).send("Le jeu n'a pas pu être récupéré")
+            return res.status(404).send("Le jeu n'a pas pu être récupéré")
         } 
 
         return res.json(results);
@@ -86,7 +86,7 @@ router.post('/', (req, res) => {
             } else {
 
                 if (results[0] != undefined) {
-                    res.send('Ce jeu est déjà dans la base de donnée')
+                    return res.send('Ce jeu est déjà dans la base de donnée')
                 } else {
 
                     connection.query('INSERT INTO games SET ?', req.body, (err, results) => {
@@ -152,7 +152,7 @@ router.delete('/:id', (req, res) => {
                 sql: err.sql
             })
         } else {
-            res.status(200).json({ status : "Suppression faite"});
+            return res.status(200).json({ status : "Le jeu a été supprimé"});
         }
     })
 

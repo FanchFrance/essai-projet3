@@ -115,7 +115,7 @@ router.delete('/:id', (req, res) => {
                 sql: err.sql
             })
         } else {
-            res.status(200).json({ status : "Message de prévention Supprimé"});
+            return res.status(200).json({ status : "Message de prévention Supprimé"});
         }
     })
 

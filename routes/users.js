@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
             sql: err.sql
         })
     } else {
-        res.json(results);
+        return res.json(results);
     }
 })
 });
@@ -28,7 +28,7 @@ router.get('/:id', (req, res) => {
         } 
 
         if (results.length === 0) {
-            res.send("L'utilisateur n'a pas pu etre trouvé")
+            return res.send("L'utilisateur n'a pas pu etre trouvé")
         }
         
         return res.json(results[0]);
@@ -47,7 +47,7 @@ router.get('/:id/companies', (req, res) => {
         }
 
         if (results.length === 0) {
-            res.send("L'utilisateur n'a pas pu etre trouvé")
+            return res.send("L'utilisateur n'a pas pu etre trouvé")
         }
 
         return res.json(results);
@@ -80,12 +80,12 @@ router.post('/', userValidationMiddlewares, (req, res) => {
             } else {
 
                 if (results[0] != undefined) {
-                    res.send('Cet email est déjà pris.')
+                    return res.send('Cet email est déjà pris.')
                 } else {
 
                     connection.query('INSERT INTO users SET ?', req.body, (err, results) => {
                         if (err) {
-                            res.status(500).json({
+                            return res.status(500).json({
                                 error : err.message,
                                 sql: err.sql,
                             })
@@ -93,7 +93,7 @@ router.post('/', userValidationMiddlewares, (req, res) => {
                         
                         return connection.query('SELECT * FROM users WHERE id = ?', results.insertId, (err2, records) => {
                             if (err2) {
-                                res.status(500).json({
+                                return res.status(500).json({
                                     error : err2.message,
                                     sql: err2.sql
                                 });
@@ -143,12 +143,12 @@ router.put('/:id', userValidationMiddlewares, (req, res) => {
 
     connection.query('DELETE FROM users WHERE id = ?', req.params.id, (err, resutls) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 error : err.message,
                 sql: err.sql,
             })
         } else {
-            res.status(200).json({statut: "succès"})
+            return res.status(200).json({statut: "succès"})
         }
     })
     })
