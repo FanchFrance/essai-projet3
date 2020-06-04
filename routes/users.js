@@ -139,7 +139,7 @@ router.put('/:id', userValidationMiddlewares, (req, res) => {
     })
     })
 
-    router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
 
     connection.query('DELETE FROM users WHERE id = ?', req.params.id, (err, resutls) => {
         if (err) {
